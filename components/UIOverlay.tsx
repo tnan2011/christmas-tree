@@ -66,18 +66,18 @@ export const UIOverlay: React.FC<UIOverlayProps> = ({ mode, onToggle, onPhotosUp
 
   const handleShare = async () => {
     if (!uploadedPhotos || uploadedPhotos.length === 0) {
-      setShareError('请先上传照片');
+      setShareError('Vui lòng tải ảnh lên trước.');
       return;
     }
 
     setIsSharing(true);
     setShareError('');
     setShareLink('');
-    setUploadProgress('准备上传...');
+    setUploadProgress('Sẵn sàng tải lên...');
 
     try {
       // Step 1: Get presigned upload URLs from server
-      setUploadProgress('获取上传地址...');
+      setUploadProgress('Lấy địa chỉ tải lên...');
       const urlsResponse = await fetch('/api/get-upload-urls', {
         method: 'POST',
         headers: {
@@ -105,24 +105,24 @@ export const UIOverlay: React.FC<UIOverlayProps> = ({ mode, onToggle, onPhotosUp
             setShareLink(shareLink);
             return;
           } catch (storageError: any) {
-            setShareError('图片数据太大，请减少照片数量或大小');
+            setShareError('Dữ liệu hình ảnh quá lớn; vui lòng giảm số lượng hoặc kích thước ảnh.');
             return;
           }
         } else {
-          throw new Error('API 未配置，请检查部署设置');
+          throw new Error('API Chưa được cấu hình, vui lòng kiểm tra cài đặt triển khai.');
         }
       }
 
       const urlsData = await urlsResponse.json();
 
       if (!urlsResponse.ok) {
-        throw new Error(urlsData.error || '获取上传地址失败');
+        throw new Error(urlsData.error || 'Không thể lấy được địa chỉ tải lên');
       }
 
       const { shareId, uploadUrls } = urlsData;
 
       // Step 2: Upload images directly to R2 using presigned URLs
-      setUploadProgress(`上传照片中 (0/${uploadedPhotos.length})...`);
+      setUploadProgress(`Đang tải ảnh lên (0/${uploadedPhotos.length})...`);
       
       let uploadedCount = 0;
       const uploadPromises = uploadedPhotos.map(async (photo, index) => {
@@ -138,18 +138,18 @@ export const UIOverlay: React.FC<UIOverlayProps> = ({ mode, onToggle, onPhotosUp
         });
 
         if (!uploadResponse.ok) {
-          throw new Error(`上传第 ${index + 1} 张图片失败`);
+          throw new Error(`上传第 ${index + 1} Hình ảnh không tải được.`);
         }
 
         uploadedCount++;
-        setUploadProgress(`上传照片中 (${uploadedCount}/${uploadedPhotos.length})...`);
+        setUploadProgress(`Thêm ảnh (${uploadedCount}/${uploadedPhotos.length})...`);
         return publicUrl;
       });
 
       const imageUrls = await Promise.all(uploadPromises);
 
       // Step 3: Complete the upload by storing metadata in KV
-      setUploadProgress('生成分享链接...');
+      setUploadProgress('Chia sẽ...');
       const completeResponse = await fetch('/api/complete-upload', {
         method: 'POST',
         headers: {
@@ -164,7 +164,7 @@ export const UIOverlay: React.FC<UIOverlayProps> = ({ mode, onToggle, onPhotosUp
       const completeData = await completeResponse.json();
 
       if (!completeResponse.ok) {
-        throw new Error(completeData.error || '保存分享信息失败');
+        throw new Error(completeData.error || 'Không thể lưu thông tin được chia sẻ.');
       }
 
       setShareLink(completeData.shareLink);
@@ -187,12 +187,12 @@ export const UIOverlay: React.FC<UIOverlayProps> = ({ mode, onToggle, onPhotosUp
           setShareLink(shareLink);
           return;
         } catch (storageError: any) {
-          setShareError('图片数据太大，请减少照片数量或大小');
+          setShareError('Dữ liệu hình ảnh quá lớn; vui lòng giảm số lượng hoặc kích thước ảnh.');
           return;
         }
       }
       
-      setShareError(error.message || '分享失败，请重试');
+      setShareError(error.message || 'Chia sẻ không thành công, vui lòng thử lại.');
     } finally {
       setIsSharing(false);
       setUploadProgress('');
@@ -275,7 +275,7 @@ export const UIOverlay: React.FC<UIOverlayProps> = ({ mode, onToggle, onPhotosUp
                   className="group px-6 py-3 border-2 border-[#D4AF37] bg-black/70 backdrop-blur-md overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_#D4AF37] hover:border-[#fff] hover:bg-[#D4AF37]/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="relative z-10 font-serif text-base md:text-lg text-[#D4AF37] tracking-[0.1em] group-hover:text-white transition-colors whitespace-nowrap">
-                    {uploadProgress || (isSharing ? '生成中...' : '生成分享链接')}
+                    {uploadProgress || (isSharing ? '生成中...' : 'Tạo liên kết chia sẻ')}
                   </span>
                 </button>
                 {shareError && (
@@ -287,7 +287,7 @@ export const UIOverlay: React.FC<UIOverlayProps> = ({ mode, onToggle, onPhotosUp
             {/* Share Link Display - Show after link is generated */}
             {shareLink && (
               <div className="bg-black/80 backdrop-blur-md border-2 border-[#D4AF37] p-4 max-w-sm">
-                <p className="text-[#F5E6BF] font-serif text-sm mb-2">分享链接已生成</p>
+                <p className="text-[#F5E6BF] font-serif text-sm mb-2">Đã tạo liên kết chia sẻ</p>
                 <div className="flex items-center gap-2 mb-2">
                   <input
                     type="text"
