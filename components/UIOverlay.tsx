@@ -261,7 +261,7 @@ export const UIOverlay: React.FC<UIOverlayProps> = ({ mode, onToggle, onPhotosUp
                 className="group px-6 py-3 border-2 border-[#D4AF37] bg-black/70 backdrop-blur-md overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_#D4AF37] hover:border-[#fff] hover:bg-[#D4AF37]/20"
               >
                 <span className="relative z-10 font-serif text-base md:text-lg text-[#D4AF37] tracking-[0.1em] group-hover:text-white transition-colors whitespace-nowrap">
-                  上传照片
+                  Tải ảnh lên
                 </span>
               </button>
             )}
@@ -275,7 +275,7 @@ export const UIOverlay: React.FC<UIOverlayProps> = ({ mode, onToggle, onPhotosUp
                   className="group px-6 py-3 border-2 border-[#D4AF37] bg-black/70 backdrop-blur-md overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_#D4AF37] hover:border-[#fff] hover:bg-[#D4AF37]/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="relative z-10 font-serif text-base md:text-lg text-[#D4AF37] tracking-[0.1em] group-hover:text-white transition-colors whitespace-nowrap">
-                    {uploadProgress || (isSharing ? '生成中...' : 'Tạo liên kết chia sẻ')}
+                    {uploadProgress || (isSharing ? 'Tạo...' : 'Tạo liên kết chia sẻ')}
                   </span>
                 </button>
                 {shareError && (
@@ -300,12 +300,12 @@ export const UIOverlay: React.FC<UIOverlayProps> = ({ mode, onToggle, onPhotosUp
                     className="px-3 py-2 border border-[#D4AF37] bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 transition-colors shrink-0"
                   >
                     <span className="text-[#D4AF37] text-xs font-serif whitespace-nowrap">
-                      {copied ? '✓ 已复制' : '复制'}
+                      {copied ? '✓ Đã sao chép: 'Copy''}
                     </span>
                   </button>
                 </div>
                 <p className="text-[#F5E6BF]/50 text-xs font-serif">
-                  30天后过期
+                  Hết hạn sau 30 ngày
                 </p>
               </div>
             )}
